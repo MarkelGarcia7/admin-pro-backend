@@ -6,12 +6,32 @@ const { generarJWT } = require('../helpers/jwt');
 
 const getUsuarios = async( req, res ) => {
 
-    const usuarios = await Usuario.find({}, 'nombre email role google'); 
+    const desde = Number(req.query.desde)  || 0;
+
+    /* esto lo que hace es empezar desde el numero introducido en el desde (skip) y 
+    luego limitar a 5 busquedas (limit), este código y el de abajo es lo mismo pero 
+    el de abajo es mas eficiente ya que no tiene 2 await */
+    
+    /* const usuarios = await Usuario
+                            .find({}, 'nombre email role google')
+                            .skip( desde )
+                            .limit( 5 );
+
+    const total = await Usuario.count(); */
+
+    const [ usuarios, total ] = await Promise.all([
+        Usuario
+            .find({}, 'nombre email role google img')
+            .skip( desde )
+            .limit( 5 ),
+
+        Usuario.countDocuments()
+    ])
 
     res.json({
         ok: true,
         usuarios,
-        uid: req.uid
+        total
     });
 }
 
