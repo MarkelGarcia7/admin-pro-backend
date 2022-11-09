@@ -90,11 +90,25 @@ const googleSignIn = async( req, res = response ) => {
             msg: 'Token de google no es correcto'
         });
     }   
+}
+
+const renewToken = async ( req, res = response ) => {
+
+    const uid = req.uid;
+
+     /* Generar el token - JsonWebToken */
+     const token = await generarJWT( uid );
+
+    res.json({
+        ok: true,
+        token
+    })
 
 }
 
 
 module.exports = {
     login,
-    googleSignIn 
+    googleSignIn,
+    renewToken 
 }
