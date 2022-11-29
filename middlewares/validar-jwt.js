@@ -80,12 +80,12 @@ const validarADMIN_ROLE_o_MismoUsuario = async(req, res, next) => {
         });
       }
 
-      if ( usuarioDB.role === 'ADMIN_ROLE' || uid !== id ) {
+      if ( usuarioDB.role !== 'ADMIN_ROLE' && uid !== id ) {
         return res.status(403).json({
             ok: false,
             msg: 'No tiene privilegios para hacer eso'
-      });
-    }
+        });
+      }
 
     next();
         
